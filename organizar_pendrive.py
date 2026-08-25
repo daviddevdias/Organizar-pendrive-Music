@@ -50,18 +50,16 @@ ORDEM_ARTISTAS = None
 # Extensões de áudio que serão consideradas música
 EXTENSOES_VALIDAS = {".mp3", ".wav", ".flac", ".m4a", ".ogg"}
 
-# ==========================================================
-
 
 def listar_musicas(pasta: Path):
-    """Lista os arquivos de música de uma pasta, em ordem alfabética."""
+    """Lista os arquivos de música de uma pasta e subpastas (álbuns), em ordem alfabética."""
     if not pasta.exists():
         return []
     return sorted(
-        f for f in pasta.iterdir()
-        if f.is_file() and f.suffix.lower() in EXTENSOES_VALIDAS
+        (f for f in pasta.rglob("*")
+         if f.is_file() and f.suffix.lower() in EXTENSOES_VALIDAS),
+        key=lambda f: str(f).lower()
     )
-
 
 def organizar():
     origem = Path(PASTA_ORIGEM)
